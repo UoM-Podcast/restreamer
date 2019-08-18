@@ -148,6 +148,8 @@ RUN cd /restreamer && \
         curl && \
     apt autoremove -y
 
+RUN mkdir /recordings && chown nobody:root /recordings
+
 EXPOSE 8080
 EXPOSE 8181
 

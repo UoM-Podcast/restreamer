@@ -1,20 +1,23 @@
 version: '3'
 services:
     restreamer:
-        image: datarhei/restreamer
+        image: restreamer:latest
         ports:
             - "8080:8080"
+            - "1935:1935"
         networks:
             - frontend
         volumes:
-            - "~/db:/restreamer/db"
+            - restreamervol:/restreamer/db
+            - "~/restreamerrecs:/recordings"
         environment:
-          - RS_USERNAME=admin
-          - RS_PASSWORD=datarhei
+          - RS_USERNAME=${RS_USERNAME}
+          - RS_PASSWORD=${RS_PASSWORD}
           - RS_LOGLEVEL=4
-          - RS_TIMEZONE=Europe/Berlin
+          - RS_TIMEZONE=Europe/London
           - RS_SNAPSHOT_INTERVAL=1m
           - RS_AUDIO=auto
+          - RS_TOKEN=${RS_TOKEN}
         deploy:
           replicas: 1
           restart_policy:
@@ -23,3 +26,6 @@ services:
             window: 10s
 networks:
   frontend:
+
+volumes:
+  restreamervol:
