@@ -101,7 +101,7 @@ RUN mkdir -p /dist && cd /dist && \
     curl -OL "https://github.com/arut/nginx-rtmp-module/archive/v${NGINXRTMP_VERSION}.tar.gz" && \
     tar -xvz -f "v${NGINXRTMP_VERSION}.tar.gz" && \
     cd nginx-${NGINX_VERSION} && \
-    ./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-http_v2_module --add-module=/dist/nginx-rtmp-module-${NGINXRTMP_VERSION} && \
+    ./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-http_v2_module --add-module=/dist/nginx-rtmp-module-${NGINXRTMP_VERSION} --with-debug && \
     make -j$(nproc) && \
     make install
 
@@ -144,11 +144,18 @@ RUN cd /restreamer && \
     npm uninstall -g grunt-cli nodemon eslint && \
     npm prune --production && \
     apt-get remove -y \
-        git \
-        curl && \
+        git && \
     apt autoremove -y
 
-RUN mkdir /recordings && chown nobody:root /recordings
+COPY ./contrib/opencast /opt/opencast
+
+RUN mkdir /var/restreamer && \
+    mkdir /var/restreamer/recordings && \
+    chown -R nobody:root /var/restreamer && \
+    chown -R nobody:nogroup /opt/opencast && \
+    chmod -R 755 /opt/opencast/ingest-single-request.sh
+
+RUN apt-get install -y curl
 
 EXPOSE 8080
 EXPOSE 8181

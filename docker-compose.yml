@@ -9,7 +9,7 @@ services:
             - frontend
         volumes:
             - restreamervol:/restreamer/db
-            - "~/restreamerrecs:/recordings"
+            - recordingsvol:/var/restreamer/recordings
         environment:
           - RS_USERNAME=${RS_USERNAME}
           - RS_PASSWORD=${RS_PASSWORD}
@@ -29,3 +29,4 @@ networks:
 
 volumes:
   restreamervol:
+  recordingsvol:
