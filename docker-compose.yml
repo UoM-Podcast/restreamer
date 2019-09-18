@@ -1,7 +1,7 @@
 version: '3'
 services:
     restreamer:
-        image: restreamer:latest
+        image: ${RS_DOCKER_IMAGE}
         ports:
             - "8080:8080"
             - "1935:1935"

@@ -65,3 +65,5 @@ bin
 src/webserver/public/dist/**
 db/**
 heapdump
+
+restreamer_vars*

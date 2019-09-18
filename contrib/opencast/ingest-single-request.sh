@@ -1,11 +1,14 @@
 #!/bin/bash
+# Get the opencast conf
 . /opt/opencast/opencast.conf
-NUMBER_OF_INGESTS=1
+
 #OC_SERVER='opencastserver'
 #OC_DIGEST_LOGIN='opencastdigestlogin'
-VIDEO_FILE=$1
-echo ${OC_WORKFLOW}
 #OC_WORKFLOW='opencastworkflow'
+
+VIDEO_FILE=$1
+BASE_NAME=$2
+
 #set -eux
 if [ ! -f "${VIDEO_FILE}" ]; then
 read -r VIDEO_FILE
@@ -13,14 +16,18 @@ if [ ! -f "${VIDEO_FILE}" ]; then
 exit 1
 fi
 fi
+# transcode to mp4
+#/usr/local/bin/ffmpeg -i $VIDEO_FILE -f mp4 /var/restreamer/recordings/$BASE_NAME.mp4
 # Generate title and name
-CURRENT_DATE=$(date '+%Y-%m-%d_%H:%M:%S')
-TITLE="Test Livestream $CURRENT_DATE"
-NAME="UoM"
+CURRENT_DATE=$(date '+%Y-%m-%dT_%H:%M:%S')
+TITLE="${OC_TITLE_PREFIX} $CURRENT_DATE"
+NAME="${OC_NAME}"
 # Ingest media
-/usr/bin/curl -s -o /dev/null -f -i --digest -u ${OC_DIGEST_LOGIN} \
+/usr/bin/curl --insecure -s -o /dev/null -f -i --digest -u ${OC_DIGEST_LOGIN} \
 -H "X-Requested-Auth: Digest" \
 "${OC_SERVER}/ingest/addMediaPackage/${OC_WORKFLOW}" \
 -F flavor="presentation/source" \
 -F "BODY=@${VIDEO_FILE}" -F title="${TITLE}" \
--F creator="${NAME}"
+-F creator="${NAME}" \
+-F processingProfile="advanced" \
+-F isPartOf="${OC_SERIES}"
