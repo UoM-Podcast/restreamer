@@ -157,6 +157,20 @@ RUN mkdir /var/restreamer && \
 
 RUN apt-get install -y curl
 
+RUN apt-get install -y jq
+
+RUN apt-get update && \
+    apt-get install -y \
+        python3 \
+        python3-pip \
+        python3-setuptools \
+        groff \
+        less \
+    && pip3 install --upgrade pip \
+    && apt-get clean
+
+RUN pip3 --no-cache-dir install --upgrade awscli
+
 EXPOSE 8080
 EXPOSE 8181
 

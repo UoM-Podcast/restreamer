@@ -26,8 +26,11 @@ NAME="${OC_NAME}"
 /usr/bin/curl --insecure -s -o /dev/null -f -i --digest -u ${OC_DIGEST_LOGIN} \
 -H "X-Requested-Auth: Digest" \
 "${OC_SERVER}/ingest/addMediaPackage/${OC_WORKFLOW}" \
--F flavor="presentation/source" \
+-F flavor="presenter/source" \
 -F "BODY=@${VIDEO_FILE}" -F title="${TITLE}" \
 -F creator="${NAME}" \
--F processingProfile="advanced" \
 -F isPartOf="${OC_SERIES}"
+# send to s3 for backup
+aws s3 cp ${VIDEO_FILE} s3://${RS_S3_ARCHIVE}/${BASE_NAME}
+# remove the file
+rm -f ${VIDEO_FILE}
